@@ -67,5 +67,4 @@ inputField.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
 hasstyle = False
 hasopen = False
 mainWindow.update_idletasks()
-mainWindow.withdraw()
 mainWindow.mainloop(0)
