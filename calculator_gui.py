@@ -40,7 +40,6 @@ def minimizeHandler():
 def showHandler(_):
     global hasopen
     if not hasopen:
-        mainWindow.withdraw()
         mainWindow.overrideredirect(True)
         mainWindow.update_idletasks()
         hasopen = True
