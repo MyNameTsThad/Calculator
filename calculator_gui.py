@@ -1,23 +1,10 @@
 # Import Modules
 import tkinter as tk
 import os
-from ctypes import windll
+# from ctypes import windll
 
 # Custom Title bar Handler, because Tk sux
 # I copied the code LMAO
-GWL_EXSTYLE=-20
-WS_EX_APPWINDOW=0x00040000
-WS_EX_TOOLWINDOW=0x00000080
-
-def set_appwindow():
-    global hasstyle
-    if not hasstyle:
-        hwnd = windll.user32.GetParent(mainWindow.winfo_id())
-        style = windll.user32.GetWindowLongW(hwnd, GWL_EXSTYLE) & ~WS_EX_TOOLWINDOW | WS_EX_APPWINDOW
-        _ = windll.user32.SetWindowLongW(hwnd, GWL_EXSTYLE, style)
-        mainWindow.withdraw()
-        mainWindow.after(1, lambda:mainWindow.wm_deiconify())
-        hasstyle=True
 
 # Tk Configurations
 mainWindow = tk.Tk()
@@ -56,7 +43,6 @@ def showHandler(_):
         mainWindow.withdraw()
         mainWindow.overrideredirect(True)
         mainWindow.update_idletasks()
-        set_appwindow()
         hasopen = True
 
 
@@ -82,5 +68,4 @@ hasstyle = False
 hasopen = False
 mainWindow.update_idletasks()
 mainWindow.withdraw()
-set_appwindow()
 mainWindow.mainloop(0)
