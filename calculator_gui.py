@@ -8,6 +8,21 @@ isShowingAnswerOrEmpty = True
 
 functionDefinitions = {
     "√": lambda number, power: f"{number} ** (1 / {power})",
+    "sqrt": lambda number: f"sqrt({number})",
+    "sin": lambda number: f"math.sin({number})",
+    "cos": lambda number: f"math.cos({number})",
+    "tan": lambda number: f"math.tan({number})",
+    "asin": lambda number: f"math.asin({number})",
+    "acos": lambda number: f"math.acos({number})",
+    "atan": lambda number: f"math.atan({number})",
+    "log": lambda number: f"math.log({number})",
+    "ln": lambda number: f"math.log({number}, math.e)",
+    "base": lambda number, base1, base2: int(str(number), base1).to_bytes(base2, 'big'),
+    "!": lambda number: f"math.factorial({number})",
+    "abs": lambda number: f"abs({number})",
+    "round": lambda number, precision: f"round({number}, {precision})",
+    "ceil": lambda number: f"math.ceil({number})",
+    "floor": lambda number: f"math.floor({number})",
 }
 
 
@@ -43,14 +58,15 @@ def handle_functions(match: re.Match[str]):
     print(f"subexpr: {subexpr}")
     # the function name is the character before the first parenthesis
     # the arguments are the characters inside the first and last parenthesis
-    function = subexpr[0]
-    args = subexpr[2:-1]
+    # pos of first parenthesis
+    first = subexpr.index("(")
+    function = subexpr[:first]
 
     # determine the arguments based on how deep the comma is nested
     depth = 0
     arg = ""
     args = []
-    for char in subexpr[2:-1]:
+    for char in subexpr[first + 1:-1]:
         if char == "," and depth == 0:
             args.append(arg.strip())
             arg = ""
@@ -77,17 +93,20 @@ def handle_functions(match: re.Match[str]):
 
 def preprocess(expr: str):
     # preprocess the expression (functions)
-    #  format: √(power,number) -> (number**(1/power))
     expr = re.sub(r"\[(.*)]", handle_functions, expr)
-    #  format:
 
     # preprocess the expression (complex)
     #  add multiplication operator between a number and a parenthesis
     expr = re.sub(r"(\d)\(", r"\1*(", expr)
+    expr = re.sub(r"(\d)\[", r"\1*[", expr)
     #  add multiplication operator between a parenthesis and a number
     expr = re.sub(r"\)(\d)", r")*\1", expr)
+    expr = re.sub(r"\](\d)", r"]*\1", expr)
     #  add multiplication operator between a parenthesis and a parenthesis
     expr = re.sub(r"\)(\()", r")*(", expr)
+    expr = re.sub(r"\](\()", r"]*(", expr)
+    expr = re.sub(r"\)(\[)", r")*[", expr)
+    expr = re.sub(r"\](\[)", r"]*[", expr)
     # remove leading zeros
     expr = re.sub(r"\b0+(\d+)", r"\1", expr)
 
@@ -98,12 +117,17 @@ def preprocess(expr: str):
         expr = re.sub(fr"{op}(\d)", fr"{op}*\1", expr)
         #  add multiplication operator between op and a parenthesis
         expr = re.sub(fr"{op}\(", fr"{op}*(", expr)
+        expr = re.sub(fr"{op}\[", fr"{op}*[", expr)
         #  add multiplication operator between a parenthesis and op
         expr = re.sub(fr"\){op}", fr")*{op}", expr)
+        expr = re.sub(fr"\]{op}", fr"]*{op}", expr)
 
     # preprocess the expression (simple)
+    expr = expr.replace("×", "*")
+    expr = expr.replace("÷", "/")
     expr = expr.replace("mod", "%")
     expr = expr.replace("π", "math.pi")
+    expr = expr.replace("e", "math.e")
     expr = expr.replace("^", "**")
     expr = expr.replace("Ans", str(latestAns))
 
@@ -176,8 +200,8 @@ frm = ttk.Frame(root, padding=10)
 frm.pack(expand=True, fill=tk.BOTH)
 
 result_label = ttk.Label(frm, text="0", font=("Inter", 25), justify="left", anchor="e")
-result_label.grid(column=0, columnspan=5, row=0, sticky="e")
-for i in range(5):
+result_label.grid(column=0, columnspan=10, row=0, sticky="e")
+for i in range(10):
     frm.columnconfigure(i, weight=1)
 
 for j in range(6):
@@ -203,6 +227,7 @@ bind_key("[", lambda: handle_input("["))
 bind_key("]", lambda: handle_input("]"))
 bind_key(",", lambda: handle_input(","))
 bind_key("p", lambda: handle_input("π"))
+bind_key("e", lambda: handle_input("e"))
 bind_key("m", lambda: handle_input("mod"))
 bind_key("s", lambda: handle_input("[√(,2)]"))
 bind_key("_", lambda: handle_input("Ans"))
@@ -223,6 +248,30 @@ ttk.Button(frm, text="√", style="Operator.TButton", command=lambda: handle_inp
                                                                                                   sticky="nsew")
 ttk.Button(frm, text="^", style="Operator.TButton", command=lambda: handle_input("^")).grid(column=4, row=3,
                                                                                             sticky="nsew")
+ttk.Button(frm, text="base", style="Operator.TButton", command=lambda: handle_input("[base(,2,10)]")).grid(column=5, row=1,
+                                                                                                  sticky="nsew")
+ttk.Button(frm, text="sin", style="Operator.TButton", command=lambda: handle_input("[sin()]")).grid(column=6, row=1,
+                                                                                                    sticky="nsew")
+ttk.Button(frm, text="cos", style="Operator.TButton", command=lambda: handle_input("[cos()]")).grid(column=7, row=1,
+                                                                                                    sticky="nsew")
+ttk.Button(frm, text="tan", style="Operator.TButton", command=lambda: handle_input("[tan()]")).grid(column=8, row=1,
+                                                                                                    sticky="nsew")
+ttk.Button(frm, text="×10ⁿ", style="Operator.TButton", command=lambda: handle_input("×(10^)")).grid(column=5, row=2,
+                                                                                                    sticky="nsew")
+ttk.Button(frm, text="asin", style="Operator.TButton", command=lambda: handle_input("[asin()]")).grid(column=6, row=2,
+                                                                                                      sticky="nsew")
+ttk.Button(frm, text="acos", style="Operator.TButton", command=lambda: handle_input("[acos()]")).grid(column=7, row=2,
+                                                                                                      sticky="nsew")
+ttk.Button(frm, text="atan", style="Operator.TButton", command=lambda: handle_input("[atan()]")).grid(column=8, row=2,
+                                                                                                      sticky="nsew")
+ttk.Button(frm, text="x⁻¹", style="Operator.TButton", command=lambda: handle_input("^-1")).grid(column=5, row=3,
+                                                                                                sticky="nsew")
+ttk.Button(frm, text="e", style="Operator.TButton", command=lambda: handle_input("e")).grid(column=6, row=3,
+                                                                                            sticky="nsew")
+ttk.Button(frm, text="log", style="Operator.TButton", command=lambda: handle_input("[log()]")).grid(column=7, row=3,
+                                                                                                    sticky="nsew")
+ttk.Button(frm, text="ln", style="Operator.TButton", command=lambda: handle_input("[ln()]")).grid(column=8, row=3,
+                                                                                                  sticky="nsew")
 
 for i in range(1, 10):
     ttk.Button(frm, text=str(i), style="Numpad.TButton", command=lambda i=i: handle_input(i)).grid(column=(i - 1) % 3,
@@ -238,10 +287,10 @@ ttk.Button(frm, text="%", style="Operator.TButton", command=handle_backspace).gr
 
 ttk.Button(frm, text="=", style="Enter.TButton", command=eval_result).grid(column=4, row=4, rowspan=2, sticky="nsew")
 
-for i, op in enumerate(['+', '-', '*', '/']):
-    ttk.Button(frm, text=op, style="Operator.TButton", command=lambda op=op: handle_input(op)).grid(column=3,
-                                                                                                    row=i + 2,
-                                                                                                    sticky="nsew")
-    bind_key(op, lambda op=op: handle_input(op))
+for i, op in enumerate([['+', '+'], ['-', '-'], ['×', '*'], ['÷', '/']]):
+    ttk.Button(frm, text=op[0], style="Operator.TButton", command=lambda op=op[0]: handle_input(op)).grid(column=3,
+                                                                                                          row=i + 2,
+                                                                                                          sticky="nsew")
+    bind_key(op[1], lambda op=op[0]: handle_input(op))
 
 root.mainloop()
