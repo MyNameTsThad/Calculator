@@ -187,19 +187,23 @@ def bind_key(key, command):
 root = tk.Tk()
 root.option_add("*tearOff", False)
 root.title("SKILL ISSUE Calculator")
+root.configure(bg="#242424")
 
 style = ttk.Style()
 style.configure("Operator.TButton", foreground="white", background="#3A3A3A", font=("Inter", 14))
 style.configure("Numpad.TButton", foreground="white", background="#505050", font=("Inter", 14))
 style.configure("Enter.TButton", foreground="white", background="#E66100", font=("Inter", 14))
+style.configure("TFrame", background="#242424")
+style.configure("TLabel", background="#242424", foreground="white", font=("Inter", 25))
 style.map("Operator.TButton", background=[("active", "#4A4A4A")])
 style.map("Numpad.TButton", background=[("active", "#656565")])
 style.map("Enter.TButton", background=[("active", "#FF7F00")])
-frm = ttk.Frame(root, padding=10)
 
+frm = ttk.Frame(root, padding=10)
+frm.configure(style="TFrame")
 frm.pack(expand=True, fill=tk.BOTH)
 
-result_label = ttk.Label(frm, text="0", font=("Inter", 25), justify="left", anchor="e")
+result_label = ttk.Label(frm, text="0", justify="left", anchor="e")
 result_label.grid(column=0, columnspan=10, row=0, sticky="e")
 for i in range(10):
     frm.columnconfigure(i, weight=1)
@@ -248,8 +252,9 @@ ttk.Button(frm, text="√", style="Operator.TButton", command=lambda: handle_inp
                                                                                                   sticky="nsew")
 ttk.Button(frm, text="^", style="Operator.TButton", command=lambda: handle_input("^")).grid(column=4, row=3,
                                                                                             sticky="nsew")
-ttk.Button(frm, text="base", style="Operator.TButton", command=lambda: handle_input("[base(,2,10)]")).grid(column=5, row=1,
-                                                                                                  sticky="nsew")
+ttk.Button(frm, text="base", style="Operator.TButton", command=lambda: handle_input("[base(,2,10)]")).grid(column=5,
+                                                                                                           row=1,
+                                                                                                           sticky="nsew")
 ttk.Button(frm, text="sin", style="Operator.TButton", command=lambda: handle_input("[sin()]")).grid(column=6, row=1,
                                                                                                     sticky="nsew")
 ttk.Button(frm, text="cos", style="Operator.TButton", command=lambda: handle_input("[cos()]")).grid(column=7, row=1,
