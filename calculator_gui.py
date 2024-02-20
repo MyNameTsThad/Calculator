@@ -29,6 +29,7 @@ functionDefinitions = {
 
 def update_result(value):
     result_label["text"] = value
+    update_font_size()
 
 
 def handle_input(num):
@@ -111,7 +112,7 @@ def preprocess(expr: str):
     # remove leading zeros
     expr = re.sub(r"\b0+(\d+)", r"\1", expr)
 
-    for i, op in enumerate(["π", "Ans"]):
+    for i, op in enumerate(["π", "Ans", "e"]):
         #  add multiplication operator between a number and op
         expr = re.sub(fr"(\d){op}", fr"\1*{op}", expr)
         #  add multiplication operator between op and a number
@@ -177,6 +178,17 @@ def cut_copy_paste(key):
         clear_result()
 
 
+def update_font_size():
+    font_size = 25
+    if len(result_label["text"]) > 40:
+        font_size = 15
+    if len(result_label["text"]) > 70:
+        font_size = 10
+    if len(result_label["text"]) > 100:
+        font_size = 7
+    result_label.configure(font=(font_family, font_size))
+
+
 def show_about():
     messagebox.showinfo("SKILL ISSUE Calculator")
 
@@ -189,6 +201,7 @@ root = tk.Tk()
 root.option_add("*tearOff", False)
 root.title("SKILL ISSUE Calculator")
 root.configure(bg="#242424")
+root.geometry("960x540")
 
 font_family = "Inter"
 # if os is windows, set the font to Segoe UI
@@ -251,40 +264,90 @@ bind_key("<Control-c>", lambda: cut_copy_paste("c"))
 bind_key("<Control-v>", lambda: cut_copy_paste("v"))
 bind_key("<Control-x>", lambda: cut_copy_paste("x"))
 
-ttk.Button(frm, text="C", style="Operator.TButton", command=clear_result).grid(column=0, row=1, sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="(", style="Operator.TButton", command=lambda: handle_input("(")).grid(column=1, row=1, sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text=")", style="Operator.TButton", command=lambda: handle_input(")")).grid(column=2, row=1,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="mod", style="Operator.TButton", command=lambda: handle_input("mod")).grid(column=3, row=1,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="π", style="Operator.TButton", command=lambda: handle_input("π")).grid(column=4, row=1,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="√", style="Operator.TButton", command=lambda: handle_input("[√(,2)]")).grid(column=4, row=2,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="^", style="Operator.TButton", command=lambda: handle_input("^")).grid(column=4, row=3,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="base", style="Operator.TButton", command=lambda: handle_input("[base(,2,10)]")).grid(column=5,row=1,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="sin", style="Operator.TButton", command=lambda: handle_input("[sin()]")).grid(column=6, row=1,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="cos", style="Operator.TButton", command=lambda: handle_input("[cos()]")).grid(column=7, row=1,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="tan", style="Operator.TButton", command=lambda: handle_input("[tan()]")).grid(column=8, row=1,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="×10ⁿ", style="Operator.TButton", command=lambda: handle_input("×(10^)")).grid(column=5, row=2,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="asin", style="Operator.TButton", command=lambda: handle_input("[asin()]")).grid(column=6, row=2,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="acos", style="Operator.TButton", command=lambda: handle_input("[acos()]")).grid(column=7, row=2,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="atan", style="Operator.TButton", command=lambda: handle_input("[atan()]")).grid(column=8, row=2,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="x⁻¹", style="Operator.TButton", command=lambda: handle_input("^-1")).grid(column=5, row=3,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="e", style="Operator.TButton", command=lambda: handle_input("e")).grid(column=6, row=3,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="log", style="Operator.TButton", command=lambda: handle_input("[log()]")).grid(column=7, row=3,sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="ln", style="Operator.TButton", command=lambda: handle_input("[ln()]")).grid(column=8, row=3,sticky="nsew", padx=3, pady=3)
+ttk.Button(frm, text="C", style="Operator.TButton", command=clear_result).grid(column=0, row=1, sticky="nsew", padx=3,
+                                                                               pady=3)
+ttk.Button(frm, text="(", style="Operator.TButton", command=lambda: handle_input("(")).grid(column=1, row=1,
+                                                                                            sticky="nsew", padx=3,
+                                                                                            pady=3)
+ttk.Button(frm, text=")", style="Operator.TButton", command=lambda: handle_input(")")).grid(column=2, row=1,
+                                                                                            sticky="nsew", padx=3,
+                                                                                            pady=3)
+ttk.Button(frm, text="mod", style="Operator.TButton", command=lambda: handle_input("mod")).grid(column=3, row=1,
+                                                                                                sticky="nsew", padx=3,
+                                                                                                pady=3)
+ttk.Button(frm, text="π", style="Operator.TButton", command=lambda: handle_input("π")).grid(column=4, row=1,
+                                                                                            sticky="nsew", padx=3,
+                                                                                            pady=3)
+ttk.Button(frm, text="√", style="Operator.TButton", command=lambda: handle_input("[√(,2)]")).grid(column=4, row=2,
+                                                                                                  sticky="nsew", padx=3,
+                                                                                                  pady=3)
+ttk.Button(frm, text="^", style="Operator.TButton", command=lambda: handle_input("^")).grid(column=4, row=3,
+                                                                                            sticky="nsew", padx=3,
+                                                                                            pady=3)
+ttk.Button(frm, text="base", style="Operator.TButton", command=lambda: handle_input("[base(,2,10)]")).grid(column=5,
+                                                                                                           row=1,
+                                                                                                           sticky="nsew",
+                                                                                                           padx=3,
+                                                                                                           pady=3)
+ttk.Button(frm, text="sin", style="Operator.TButton", command=lambda: handle_input("[sin()]")).grid(column=6, row=1,
+                                                                                                    sticky="nsew",
+                                                                                                    padx=3, pady=3)
+ttk.Button(frm, text="cos", style="Operator.TButton", command=lambda: handle_input("[cos()]")).grid(column=7, row=1,
+                                                                                                    sticky="nsew",
+                                                                                                    padx=3, pady=3)
+ttk.Button(frm, text="tan", style="Operator.TButton", command=lambda: handle_input("[tan()]")).grid(column=8, row=1,
+                                                                                                    sticky="nsew",
+                                                                                                    padx=3, pady=3)
+ttk.Button(frm, text="×10ⁿ", style="Operator.TButton", command=lambda: handle_input("×(10^)")).grid(column=5, row=2,
+                                                                                                    sticky="nsew",
+                                                                                                    padx=3, pady=3)
+ttk.Button(frm, text="asin", style="Operator.TButton", command=lambda: handle_input("[asin()]")).grid(column=6, row=2,
+                                                                                                      sticky="nsew",
+                                                                                                      padx=3, pady=3)
+ttk.Button(frm, text="acos", style="Operator.TButton", command=lambda: handle_input("[acos()]")).grid(column=7, row=2,
+                                                                                                      sticky="nsew",
+                                                                                                      padx=3, pady=3)
+ttk.Button(frm, text="atan", style="Operator.TButton", command=lambda: handle_input("[atan()]")).grid(column=8, row=2,
+                                                                                                      sticky="nsew",
+                                                                                                      padx=3, pady=3)
+ttk.Button(frm, text="x⁻¹", style="Operator.TButton", command=lambda: handle_input("^-1")).grid(column=5, row=3,
+                                                                                                sticky="nsew", padx=3,
+                                                                                                pady=3)
+ttk.Button(frm, text="e", style="Operator.TButton", command=lambda: handle_input("e")).grid(column=6, row=3,
+                                                                                            sticky="nsew", padx=3,
+                                                                                            pady=3)
+ttk.Button(frm, text="log", style="Operator.TButton", command=lambda: handle_input("[log()]")).grid(column=7, row=3,
+                                                                                                    sticky="nsew",
+                                                                                                    padx=3, pady=3)
+ttk.Button(frm, text="ln", style="Operator.TButton", command=lambda: handle_input("[ln()]")).grid(column=8, row=3,
+                                                                                                  sticky="nsew", padx=3,
+                                                                                                  pady=3)
 
 for i in range(1, 10):
-    ttk.Button(frm, text=str(i), style="Numpad.TButton", command=lambda i=i: handle_input(i)).grid(column=(i - 1) % 3,row=(i - 1) // 3 + 2,sticky="nsew", padx=3, pady=3)
+    ttk.Button(frm, text=str(i), style="Numpad.TButton", command=lambda i=i: handle_input(i)).grid(column=(i - 1) % 3,
+                                                                                                   row=(i - 1) // 3 + 2,
+                                                                                                   sticky="nsew",
+                                                                                                   padx=3, pady=3)
     bind_key(str(i), lambda i=i: handle_input(i))
 
-ttk.Button(frm, text="0", style="Numpad.TButton", command=lambda: handle_input(0)).grid(column=0, row=5, sticky="nsew", padx=3, pady=3)
+ttk.Button(frm, text="0", style="Numpad.TButton", command=lambda: handle_input(0)).grid(column=0, row=5, sticky="nsew",
+                                                                                        padx=3, pady=3)
 bind_key("0", lambda: handle_input(0))
 
-ttk.Button(frm, text=".", style="Operator.TButton", command=handle_decimal_point).grid(column=1, row=5, sticky="nsew", padx=3, pady=3)
-ttk.Button(frm, text="%", style="Operator.TButton", command=handle_backspace).grid(column=2, row=5, sticky="nsew", padx=3, pady=3)
+ttk.Button(frm, text=".", style="Operator.TButton", command=handle_decimal_point).grid(column=1, row=5, sticky="nsew",
+                                                                                       padx=3, pady=3)
+ttk.Button(frm, text="%", style="Operator.TButton", command=handle_backspace).grid(column=2, row=5, sticky="nsew",
+                                                                                   padx=3, pady=3)
 
-ttk.Button(frm, text="=", style="Enter.TButton", command=eval_result).grid(column=4, row=4, rowspan=2, sticky="nsew", padx=3, pady=3)
+ttk.Button(frm, text="=", style="Enter.TButton", command=eval_result).grid(column=4, row=4, rowspan=2, sticky="nsew",
+                                                                           padx=3, pady=3)
 
 for i, op in enumerate([['+', '+'], ['-', '-'], ['×', '*'], ['÷', '/']]):
-    ttk.Button(frm, text=op[0], style="Operator.TButton", command=lambda op=op[0]: handle_input(op)).grid(column=3,row=i + 2,sticky="nsew", padx=3, pady=3)
+    ttk.Button(frm, text=op[0], style="Operator.TButton", command=lambda op=op[0]: handle_input(op)).grid(column=3,
+                                                                                                          row=i + 2,
+                                                                                                          sticky="nsew",
+                                                                                                          padx=3,
+                                                                                                          pady=3)
     bind_key(op[1], lambda op=op[0]: handle_input(op))
 
 root.mainloop()
