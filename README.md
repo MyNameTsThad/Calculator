@@ -1,6 +1,6 @@
 hai!!!!!!!! 
 
-this is a calculator written in python's tkinter library for a programming class assignment.
+this is a calculator written in python's `tkinter` library for a programming class assignment.
 
 ## features
 - basic arithmatic (addition, subtraction, multiplication, division)
@@ -9,5 +9,8 @@ this is a calculator written in python's tkinter library for a programming class
 - dynamic font resizing
 - rich keyboard support
 - base conversions
+
+  ![image](https://github.com/MyNameTsThad/Calculator/assets/62128640/96a4bf42-e11b-4afc-b9d9-26237a0356a3)
+
 
 - also theres a whole game in here
