@@ -18,13 +18,29 @@ functionDefinitions = {
     "atan": lambda number: f"math.atan({number})",
     "log": lambda number: f"math.log({number})",
     "ln": lambda number: f"math.log({number}, math.e)",
-    "base": lambda number, base1, base2: int(str(number), base1).to_bytes(base2, 'big'),
+    "base": lambda number, base1, base2: f"base('{number}', {base1}, {base2})",
     "!": lambda number: f"math.factorial({number})",
     "abs": lambda number: f"abs({number})",
     "round": lambda number, precision: f"round({number}, {precision})",
     "ceil": lambda number: f"math.ceil({number})",
     "floor": lambda number: f"math.floor({number})",
 }
+
+
+def base(number: str, base1: int, base2: int) -> int:
+    # step 1: convert the number to base 10
+    base10 = int(number, base1)
+    # step 2: convert the number to the new base (if the converted number is 10 or greater, use letters)
+    baseN = ""
+    if base2 != 10:
+        while base10 > 0:
+            remainder = base10 % base2
+            base10 //= base2
+            baseN = (str(remainder) if remainder < 10 else chr(remainder + 55)) + baseN
+    else:
+        baseN = str(base10)
+
+    return baseN
 
 
 def update_result(value):
@@ -42,7 +58,7 @@ def handle_input(num):
 def handle_decimal_point():
     expr = result_label.cget("text")
     # split the expression by operators into segments
-    segments = re.split(r"[+\-*/()[]πAns,]", expr)
+    segments = re.split(r"[+\-×÷()\[\]πAns,]", expr)
     # if the last segment has a decimal point, don't add another
     if not segments[-1].__contains__("."):
         update_result(expr + ".")
@@ -112,7 +128,7 @@ def preprocess(expr: str):
     # remove leading zeros
     expr = re.sub(r"\b0+(\d+)", r"\1", expr)
 
-    for i, op in enumerate(["π", "Ans", "e"]):
+    for i, op in enumerate(["π", "Ans", "E"]):
         #  add multiplication operator between a number and op
         expr = re.sub(fr"(\d){op}", fr"\1*{op}", expr)
         #  add multiplication operator between op and a number
@@ -129,7 +145,7 @@ def preprocess(expr: str):
     expr = expr.replace("÷", "/")
     expr = expr.replace("mod", "%")
     expr = expr.replace("π", "math.pi")
-    expr = expr.replace("e", "math.e")
+    expr = expr.replace("E", "math.e")
     expr = expr.replace("^", "**")
     expr = expr.replace("Ans", str(latestAns))
 
@@ -168,7 +184,7 @@ def cut_copy_paste(key):
         clipboard = root.clipboard_get()
         current = result_label.cget("text")
         # sanitize the clipboard, only allow typable characters like digits, operators, and parentheses, and pi, mod, Ans
-        pasted = re.sub(r"[^0-9+\-*/()\[\]πmodAns,.√^]", "", clipboard)
+        pasted = re.sub(r"[^0-9+\-*/()\[\]πmodAns,.√^BCDEF]", "", clipboard)
 
         update_result(current + pasted if not isShowingAnswerOrEmpty else pasted)
         isShowingAnswerOrEmpty = False
@@ -244,7 +260,6 @@ for j in range(6):
 # root.config(menu=menu_bar)
 
 bind_key("<Return>", eval_result)
-bind_key("c", clear_result)
 bind_key("<Escape>", clear_result)
 bind_key("<BackSpace>", handle_backspace)
 bind_key("Q", root.destroy)
@@ -256,13 +271,26 @@ bind_key("[", lambda: handle_input("["))
 bind_key("]", lambda: handle_input("]"))
 bind_key(",", lambda: handle_input(","))
 bind_key("p", lambda: handle_input("π"))
-bind_key("e", lambda: handle_input("e"))
+bind_key("e", lambda: handle_input("E"))
+bind_key("E", lambda: handle_input("E"))
 bind_key("m", lambda: handle_input("mod"))
 bind_key("s", lambda: handle_input("[√(,2)]"))
 bind_key("_", lambda: handle_input("Ans"))
 bind_key("<Control-c>", lambda: cut_copy_paste("c"))
 bind_key("<Control-v>", lambda: cut_copy_paste("v"))
 bind_key("<Control-x>", lambda: cut_copy_paste("x"))
+bind_key("A", lambda: handle_input("A"))
+bind_key("B", lambda: handle_input("B"))
+bind_key("C", lambda: handle_input("C"))
+bind_key("D", lambda: handle_input("D"))
+bind_key("E", lambda: handle_input("E"))
+bind_key("F", lambda: handle_input("F"))
+bind_key("a", lambda: handle_input("A"))
+bind_key("b", lambda: handle_input("B"))
+bind_key("c", lambda: handle_input("C"))
+bind_key("d", lambda: handle_input("D"))
+bind_key("e", lambda: handle_input("E"))
+bind_key("f", lambda: handle_input("F"))
 
 ttk.Button(frm, text="C", style="Operator.TButton", command=clear_result).grid(column=0, row=1, sticky="nsew", padx=3,
                                                                                pady=3)
@@ -313,7 +341,7 @@ ttk.Button(frm, text="atan", style="Operator.TButton", command=lambda: handle_in
 ttk.Button(frm, text="x⁻¹", style="Operator.TButton", command=lambda: handle_input("^-1")).grid(column=5, row=3,
                                                                                                 sticky="nsew", padx=3,
                                                                                                 pady=3)
-ttk.Button(frm, text="e", style="Operator.TButton", command=lambda: handle_input("e")).grid(column=6, row=3,
+ttk.Button(frm, text="e", style="Operator.TButton", command=lambda: handle_input("E")).grid(column=6, row=3,
                                                                                             sticky="nsew", padx=3,
                                                                                             pady=3)
 ttk.Button(frm, text="log", style="Operator.TButton", command=lambda: handle_input("[log()]")).grid(column=7, row=3,
