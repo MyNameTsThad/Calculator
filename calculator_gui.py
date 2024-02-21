@@ -9,14 +9,13 @@ isShowingAnswerOrEmpty = True
 
 functionDefinitions = {
     "√": lambda number, power: f"{number} ** (1 / {power})",
-    "sqrt": lambda number: f"sqrt({number})",
     "sin": lambda number: f"math.sin({number})",
     "cos": lambda number: f"math.cos({number})",
     "tan": lambda number: f"math.tan({number})",
     "asin": lambda number: f"math.asin({number})",
     "acos": lambda number: f"math.acos({number})",
     "atan": lambda number: f"math.atan({number})",
-    "log": lambda number: f"math.log({number})",
+    "log": lambda number, base: f"math.log({number}, {base})",
     "ln": lambda number: f"math.log({number}, math.e)",
     "base": lambda number, base1, base2: f"base('{number}', {base1}, {base2})",
     "!": lambda number: f"math.factorial({number})",
@@ -24,8 +23,10 @@ functionDefinitions = {
     "round": lambda number, precision: f"round({number}, {precision})",
     "ceil": lambda number: f"math.ceil({number})",
     "floor": lambda number: f"math.floor({number})",
+    "rad2deg": lambda number: f"math.degrees({number})",
+    "deg2rad": lambda number: f"math.radians({number})",
+    "frac": lambda number: f"{number} - math.floor({number})",
 }
-
 
 def base(number: str, base1: int, base2: int) -> int:
     # step 1: convert the number to base 10
@@ -344,12 +345,45 @@ ttk.Button(frm, text="x⁻¹", style="Operator.TButton", command=lambda: handle_
 ttk.Button(frm, text="e", style="Operator.TButton", command=lambda: handle_input("E")).grid(column=6, row=3,
                                                                                             sticky="nsew", padx=3,
                                                                                             pady=3)
-ttk.Button(frm, text="log", style="Operator.TButton", command=lambda: handle_input("[log()]")).grid(column=7, row=3,
-                                                                                                    sticky="nsew",
-                                                                                                    padx=3, pady=3)
+ttk.Button(frm, text="log", style="Operator.TButton", command=lambda: handle_input("[log(,10)]")).grid(column=7, row=3,
+                                                                                                       sticky="nsew",
+                                                                                                       padx=3, pady=3)
 ttk.Button(frm, text="ln", style="Operator.TButton", command=lambda: handle_input("[ln()]")).grid(column=8, row=3,
                                                                                                   sticky="nsew", padx=3,
                                                                                                   pady=3)
+ttk.Button(frm, text="!", style="Operator.TButton", command=lambda: handle_input("[!()]")).grid(column=5, row=4,
+                                                                                                sticky="nsew",
+                                                                                                padx=3, pady=3)
+ttk.Button(frm, text="abs", style="Operator.TButton", command=lambda: handle_input("[abs()]")).grid(column=6, row=4,
+                                                                                                    sticky="nsew",
+                                                                                                    padx=3, pady=3)
+ttk.Button(frm, text="round", style="Operator.TButton", command=lambda: handle_input("[round(,0)]")).grid(column=7,
+                                                                                                          row=4,
+                                                                                                          sticky="nsew",
+                                                                                                          padx=3,
+                                                                                                          pady=3)
+ttk.Button(frm, text="ceil", style="Operator.TButton", command=lambda: handle_input("[ceil()]")).grid(column=8, row=4,
+                                                                                                      sticky="nsew",
+                                                                                                      padx=3, pady=3)
+ttk.Button(frm, text="floor", style="Operator.TButton", command=lambda: handle_input("[floor()]")).grid(column=5,
+                                                                                                        row=5,
+                                                                                                        sticky="nsew",
+                                                                                                        padx=3,
+                                                                                                        pady=3)
+ttk.Button(frm, text="rad2deg", style="Operator.TButton", command=lambda: handle_input("[rad2deg()]")).grid(column=6,
+                                                                                                            row=5,
+                                                                                                            sticky="nsew",
+                                                                                                            padx=3,
+                                                                                                            pady=3)
+ttk.Button(frm, text="deg2rad", style="Operator.TButton", command=lambda: handle_input("[deg2rad()]")).grid(column=7,
+                                                                                                            row=5,
+                                                                                                            sticky="nsew",
+                                                                                                            padx=3,
+                                                                                                            pady=3)
+ttk.Button(frm, text="frac", style="Operator.TButton", command=lambda: handle_input("[frac()]")).grid(column=8, row=5,
+                                                                                                    sticky="nsew",
+                                                                                                    padx=3, pady=3)
+
 
 for i in range(1, 10):
     ttk.Button(frm, text=str(i), style="Numpad.TButton", command=lambda i=i: handle_input(i)).grid(column=(i - 1) % 3,
