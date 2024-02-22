@@ -3,6 +3,7 @@ import os, platform
 import tkinter as tk
 from tkinter import ttk, messagebox
 import re
+# os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 latestAns = 0
 isShowingAnswerOrEmpty = True
@@ -28,6 +29,7 @@ functionDefinitions = {
     "frac": lambda number: f"{number} - math.floor({number})",
 }
 
+
 def base(number: str, base1: int, base2: int) -> int:
     # step 1: convert the number to base 10
     base10 = int(number, base1)
@@ -47,6 +49,12 @@ def base(number: str, base1: int, base2: int) -> int:
 def update_result(value):
     result_label["text"] = value
     update_font_size()
+    check_limbo()
+
+
+def check_limbo():
+    if result_label["text"] == "86084399":
+        import Limbo.limbo
 
 
 def handle_input(num):
@@ -230,6 +238,13 @@ elif platform.system() == "Darwin":
     font_family = "San Francisco"
 
 style = ttk.Style()
+style.theme_use('alt')
+style.configure('TButton', background='black', foreground='white', width=20, borderwidth=1, focusthickness=3,
+                focuscolor='none')
+style.map('TButton', background=[('active', 'black')])
+
+button = ttk.Button(root, text='Quit')
+button.place(relx=0.3, rely=0.4)
 # remove the border of the buttons and add a little padding
 style.configure("TButton", borderwidth=0, padding=10)
 style.configure("Operator.TButton", foreground="white", background="#3A3A3A", font=(font_family, 14))
@@ -381,9 +396,8 @@ ttk.Button(frm, text="deg2rad", style="Operator.TButton", command=lambda: handle
                                                                                                             padx=3,
                                                                                                             pady=3)
 ttk.Button(frm, text="frac", style="Operator.TButton", command=lambda: handle_input("[frac()]")).grid(column=8, row=5,
-                                                                                                    sticky="nsew",
-                                                                                                    padx=3, pady=3)
-
+                                                                                                      sticky="nsew",
+                                                                                                      padx=3, pady=3)
 
 for i in range(1, 10):
     ttk.Button(frm, text=str(i), style="Numpad.TButton", command=lambda i=i: handle_input(i)).grid(column=(i - 1) % 3,
