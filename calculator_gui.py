@@ -1,6 +1,7 @@
 import math
 import os, platform
 import tkinter as tk
+import webbrowser
 from tkinter import ttk, messagebox
 import re
 # os.environ["QT_QPA_PLATFORM"] = "xcb"
@@ -30,6 +31,14 @@ functionDefinitions = {
 }
 
 
+def open_secret():
+    try:
+        youtube_link = "https://youtu.be/dQw4w9WgXcQ?si=p-sywHqzrAo2Bb73"
+        webbrowser.open(youtube_link)
+    except Exception as e:
+        print("Error:", e)
+
+
 def base(number: str, base1: int, base2: int) -> int:
     # step 1: convert the number to base 10
     base10 = int(number, base1)
@@ -49,12 +58,14 @@ def base(number: str, base1: int, base2: int) -> int:
 def update_result(value):
     result_label["text"] = value
     update_font_size()
-    check_limbo()
+    check_secret()
 
 
-def check_limbo():
+def check_secret():
     if result_label["text"] == "86084399":
         import Limbo.limbo
+    if result_label["text"] == "69420":
+        open_secret()
 
 
 def handle_input(num):

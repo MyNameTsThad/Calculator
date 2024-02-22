@@ -332,7 +332,7 @@ def easeInOutBounce(t):
 font = pg.font.SysFont("arial", int(15 * minBackgroundRatio))
 FOCUS_font = pg.font.SysFont("arial", int(30 * minBackgroundRatio))
 
-auto = 0
+auto = 1
 game_over = 0
 headphone_delay = 300
 keyPressing = []
