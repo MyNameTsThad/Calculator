@@ -71,7 +71,14 @@ def check_secret():
 def handle_input(num):
     global isShowingAnswerOrEmpty
     result = result_label.cget("text")
-    update_result(result + str(num) if not isShowingAnswerOrEmpty else str(num))
+    # update_result(result + str(num) if not isShowingAnswerOrEmpty else str(num))
+    if not isShowingAnswerOrEmpty:
+        update_result(result + str(num))
+    else:
+        if num in ["+", "-", "×", "÷", "(", "[", "]", ")"]:
+            update_result("Ans" + str(num))
+        else:
+            update_result(str(num))
     isShowingAnswerOrEmpty = False
 
 
@@ -266,6 +273,18 @@ style.configure("TLabel", background="#242424", foreground="white", font=(font_f
 style.map("Operator.TButton", background=[("active", "#4A4A4A")])
 style.map("Numpad.TButton", background=[("active", "#656565")])
 style.map("Enter.TButton", background=[("active", "#FF7F00")])
+
+# menus
+# menu = tk.Menu(root)
+# root.config(menu=menu)
+# main_menu = tk.Menu(menu)
+# menu.add_cascade(label="File", menu=main_menu)
+# main_menu.add_command(label="About", command=show_about)
+# main_menu.add_command(label="Quit", command=root.destroy)
+
+# alt to hide or show the menu
+root.bind("<Alt_L>", lambda _: menu.entryconfig(0, state="normal"))
+
 
 frm = ttk.Frame(root, padding=10)
 frm.configure(style="TFrame")
